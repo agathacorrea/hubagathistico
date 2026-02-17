@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AprovAí — Painel da Social Media</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ee;
+    --ink: #1a1612;
+    --surface: #ffffff;
+    --border: #e2ddd8;
+    --muted: #9a9087;
+    --accent: #2d5a27;
+    --accent-light: #eef5ed;
+    --adara: #7c4d8a;
+    --adara-light: #f5eef8;
+    --renato: #1a4a7a;
+    --renato-light: #eaf1f9;
+    --cesar: #8a3a2a;
+    --cesar-light: #faf0ed;
+    --approve: #2d7a4d;
+    --reject: #c0392b;
+    --warn: #c07820;
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Figtree', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    padding: 0 48px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 10;
+  }
+
+  .logo {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: #f5f2ee;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo em { color: #a8d99c; font-style: italic; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: #9a9087;
+  }
+
+  .you-badge {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 5px 14px;
+    border-radius: 999px;
+    color: #e8e4de;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 52px 48px 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .hero-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 52px;
+    line-height: 1.05;
+    color: var(--ink);
+    max-width: 600px;
+    margin-bottom: 8px;
+  }
+
+  .hero-title em { font-style: italic; color: var(--accent); }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.6;
+  }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    padding: 0 48px 40px;
+    display: flex;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stat-pill {
+    padding: 10px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .stat-pill strong { color: var(--ink); font-size: 15px; font-weight: 700; }
+  .stat-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-green { background: var(--approve); }
+  .dot-yellow { background: var(--warn); }
+  .dot-red { background: var(--reject); }
+  .dot-gray { background: #ccc; }
+
+  /* ── CLIENTS GRID ── */
+  .section-label {
+    padding: 0 48px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+  }
+
+  .clients-grid {
+    padding: 0 48px 60px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .client-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .client-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  }
+
+  .client-top {
+    padding: 28px 28px 22px;
+    border-bottom: 1px solid var(--border);
+    flex: 1;
+  }
+
+  .client-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: 400;
+  }
+
+  .adara-icon { background: var(--adara-light); color: var(--adara); }
+  .renato-icon { background: var(--renato-light); color: var(--renato); }
+  .cesar-icon { background: var(--cesar-light); color: var(--cesar); }
+
+  .client-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .client-area {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  /* mini progress */
+  .mini-progress {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 14px;
+  }
+
+  .mini-bar {
+    height: 5px;
+    border-radius: 999px;
+    flex: 1;
+  }
+
+  .bar-approved { background: var(--approve); }
+  .bar-edited { background: var(--warn); }
+  .bar-rejected { background: var(--reject); }
+  .bar-pending { background: var(--border); }
+
+  .client-status-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .status-mini {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--muted);
+  }
+
+  .status-mini .dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  .client-bottom {
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .deadline { font-size: 12px; color: var(--muted); }
+  .deadline strong { color: var(--ink); font-weight: 600; }
+
+  .open-btn {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .open-btn svg { transition: transform 0.2s; }
+  .client-card:hover .open-btn svg { transform: translateX(3px); }
+
+  /* color bar top */
+  .adara-card { border-top: 3px solid var(--adara); }
+  .renato-card { border-top: 3px solid var(--renato); }
+  .cesar-card { border-top: 3px solid var(--cesar); }
+
+  /* ── LINK SHARE SECTION ── */
+  .links-section {
+    padding: 0 48px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .links-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .links-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .link-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .link-client-name {
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 180px;
+  }
+
+  .link-url {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'Courier New', monospace;
+    flex: 1;
+    background: var(--bg);
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .copy-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Figtree', sans-serif;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .copy-btn:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .copy-btn.copied { background: var(--approve); color: #fff; border-color: var(--approve); }
+
+  @media (max-width: 900px) {
+    header, .hero, .stats-row, .section-label, .clients-grid, .links-section { padding-left: 24px; padding-right: 24px; }
+    .clients-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Aprov<em>Aí</em></div>
+  <div class="header-right">
+    <div class="you-badge">👤 Sua conta — Social Media</div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-label">Painel de Gestão</div>
+  <div class="hero-title">Seus <em>clientes,</em><br>tudo em ordem.</div>
+  <div class="hero-sub">Acompanhe o status de aprovação de cada cliente e compartilhe os links individuais.</div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><div class="stat-dot dot-gray"></div><strong>15</strong> peças enviadas</div>
+  <div class="stat-pill"><div class="stat-dot dot-green"></div><strong>4</strong> aprovadas</div>
+  <div class="stat-pill"><div class="stat-dot dot-yellow"></div><strong>2</strong> com edição</div>
+  <div class="stat-pill"><div class="stat-dot dot-red"></div><strong>1</strong> reprovada</div>
+  <div class="stat-pill"><div class="stat-dot dot-gray"></div><strong>8</strong> pendentes</div>
+</div>
+
+<div class="section-label">Clientes</div>
+
+<div class="clients-grid">
+
+  <!-- Instituto Adara -->
+  <a class="client-card adara-card" href="cliente-adara.html">
+    <div class="client-top">
+      <div class="client-icon adara-icon">IA</div>
+      <div class="client-name">Instituto Adara</div>
+      <div class="client-area">Saúde & Bem-estar</div>
+      <div class="mini-progress">
+        <div class="mini-bar bar-approved" style="flex:2"></div>
+        <div class="mini-bar bar-edited" style="flex:1"></div>
+        <div class="mini-bar bar-pending" style="flex:2"></div>
+      </div>
+      <div class="client-status-row">
+        <div class="status-mini"><div class="dot" style="background:var(--approve)"></div> 2 aprovados</div>
+        <div class="status-mini"><div class="dot" style="background:var(--warn)"></div> 1 edição</div>
+        <div class="status-mini"><div class="dot" style="background:#ccc"></div> 2 pendentes</div>
+      </div>
+    </div>
+    <div class="client-bottom">
+      <div class="deadline">Prazo: <strong>20 mar</strong></div>
+      <div class="open-btn">Abrir painel <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </div>
+  </a>
+
+  <!-- Dr. Renato Andrade -->
+  <a class="client-card renato-card" href="cliente-renato.html">
+    <div class="client-top">
+      <div class="client-icon renato-icon">DR</div>
+      <div class="client-name">Dr. Renato Andrade</div>
+      <div class="client-area">Medicina & Saúde</div>
+      <div class="mini-progress">
+        <div class="mini-bar bar-approved" style="flex:1"></div>
+        <div class="mini-bar bar-rejected" style="flex:1"></div>
+        <div class="mini-bar bar-pending" style="flex:3"></div>
+      </div>
+      <div class="client-status-row">
+        <div class="status-mini"><div class="dot" style="background:var(--approve)"></div> 1 aprovado</div>
+        <div class="status-mini"><div class="dot" style="background:var(--reject)"></div> 1 reprovado</div>
+        <div class="status-mini"><div class="dot" style="background:#ccc"></div> 3 pendentes</div>
+      </div>
+    </div>
+    <div class="client-bottom">
+      <div class="deadline">Prazo: <strong>22 mar</strong></div>
+      <div class="open-btn">Abrir painel <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </div>
+  </a>
+
+  <!-- Dr. Cesar Prota -->
+  <a class="client-card cesar-card" href="cliente-cesar.html">
+    <div class="client-top">
+      <div class="client-icon cesar-icon">CP</div>
+      <div class="client-name">Dr. César Prota</div>
+      <div class="client-area">Medicina & Cirurgia</div>
+      <div class="mini-progress">
+        <div class="mini-bar bar-approved" style="flex:1"></div>
+        <div class="mini-bar bar-pending" style="flex:4"></div>
+      </div>
+      <div class="client-status-row">
+        <div class="status-mini"><div class="dot" style="background:var(--approve)"></div> 1 aprovado</div>
+        <div class="status-mini"><div class="dot" style="background:#ccc"></div> 4 pendentes</div>
+      </div>
+    </div>
+    <div class="client-bottom">
+      <div class="deadline">Prazo: <strong>25 mar</strong></div>
+      <div class="open-btn">Abrir painel <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </div>
+  </a>
+
+</div>
+
+<div class="links-section">
+  <div class="links-title">Links para compartilhar com clientes</div>
+  <div class="links-grid">
+    <div class="link-row">
+      <div class="link-client-name" style="color:var(--adara)">Instituto Adara</div>
+      <div class="link-url">aprovai.app/adara-marco2025</div>
+      <button class="copy-btn" onclick="copyLink(this, 'aprovai.app/adara-marco2025')">Copiar link</button>
+    </div>
+    <div class="link-row">
+      <div class="link-client-name" style="color:var(--renato)">Dr. Renato Andrade</div>
+      <div class="link-url">aprovai.app/renato-marco2025</div>
+      <button class="copy-btn" onclick="copyLink(this, 'aprovai.app/renato-marco2025')">Copiar link</button>
+    </div>
+    <div class="link-row">
+      <div class="link-client-name" style="color:var(--cesar)">Dr. César Prota</div>
+      <div class="link-url">aprovai.app/cesar-marco2025</div>
+      <button class="copy-btn" onclick="copyLink(this, 'aprovai.app/cesar-marco2025')">Copiar link</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function copyLink(btn, url) {
+    navigator.clipboard.writeText(url).catch(() => {});
+    btn.textContent = '✓ Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copiar link';
+      btn.classList.remove('copied');
+    }, 2000);
+  }
+</script>
+</body>
+</html>

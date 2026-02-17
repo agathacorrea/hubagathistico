@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aprovação — Dr. César Prota</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #13100e;
+    --bg2: #1a1612;
+    --surface: #1f1b18;
+    --surface2: #252119;
+    --border: #2e2820;
+    --border2: #3a3228;
+    --muted: #7a6e64;
+    --text: #ede8e2;
+    --brand: #c07838;
+    --brand-light: rgba(192,120,56,0.12);
+    --brand-mid: rgba(192,120,56,0.3);
+    --approve: #4a9060;
+    --approve-l: rgba(74,144,96,0.12);
+    --reject: #c04040;
+    --reject-l: rgba(192,64,64,0.12);
+    --warn: #c09030;
+    --warn-l: rgba(192,144,48,0.12);
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* grain texture */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: rgba(19,16,14,0.95);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    height: 62px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+
+  .back {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 13px; color: var(--muted);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .back:hover { color: var(--text); }
+
+  .id-block { display: flex; align-items: center; gap: 12px; }
+
+  .dr-ava {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--brand-light);
+    border: 1px solid var(--brand-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 14px; color: var(--brand);
+  }
+
+  .dr-nm {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 17px; color: var(--text);
+  }
+
+  .lote-badge {
+    font-size: 12px; color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 4px 12px; border-radius: 999px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 48px 48px 36px;
+    border-bottom: 1px solid var(--border);
+    position: relative; z-index: 1;
+    background: linear-gradient(180deg, var(--bg2) 0%, transparent 100%);
+  }
+
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--brand); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .eyebrow-line {
+    display: inline-block; width: 32px; height: 1px;
+    background: var(--brand); opacity: 0.5;
+  }
+
+  .hero-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 46px; line-height: 1.1;
+    color: var(--text); margin-bottom: 12px;
+  }
+
+  .hero-title em { font-style: italic; color: var(--brand); }
+
+  .hero-sub { font-size: 15px; color: var(--muted); max-width: 440px; line-height: 1.65; margin-bottom: 30px; }
+
+  .hero-bottom {
+    display: flex; align-items: center; gap: 20px;
+  }
+
+  .progress-bar-wrap { flex: 1; max-width: 300px; }
+
+  .pb-label {
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--muted); margin-bottom: 8px;
+  }
+
+  .pb-track {
+    height: 2px; background: var(--border2); border-radius: 999px; overflow: visible;
+  }
+
+  .pb-fill {
+    height: 100%; background: var(--brand); border-radius: 999px;
+    width: 0%; transition: width 0.5s ease;
+    position: relative;
+  }
+
+  .pb-fill::after {
+    content: '';
+    position: absolute; right: -4px; top: -4px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--brand);
+    box-shadow: 0 0 12px rgba(192,120,56,0.6);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .pb-fill[style*="width: 0%"]::after { opacity: 0; }
+  .pb-fill:not([style*="width: 0"])::after { opacity: 1; }
+
+  /* ── FILTER ── */
+  .filter { padding: 20px 48px 0; display: flex; gap: 6px; position: relative; z-index: 1; }
+
+  .tab {
+    padding: 7px 16px; border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent; color: var(--muted);
+    font-size: 13px; font-family: 'Outfit', sans-serif;
+    font-weight: 400; cursor: pointer; transition: all 0.18s;
+  }
+
+  .tab:hover { border-color: var(--brand); color: var(--brand); }
+  .tab.active { background: var(--brand-light); border-color: var(--brand); color: var(--brand); font-weight: 500; }
+  .tab-n { font-size: 11px; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; font-weight: 600; margin-left: 4px; }
+
+  /* ── CARDS ── */
+  .cards { padding: 18px 48px 100px; display: flex; flex-direction: column; gap: 14px; position: relative; z-index: 1; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover { border-color: var(--border2); }
+  .card.approved { border-color: var(--approve); }
+  .card.rejected  { border-color: var(--reject); }
+  .card.with-edit { border-color: var(--warn); }
+
+  .card-top { height: 2px; background: var(--border); transition: background 0.3s; }
+  .card.approved .card-top { background: var(--approve); }
+  .card.rejected  .card-top { background: var(--reject); }
+  .card.with-edit .card-top { background: var(--warn); }
+
+  .card-body { padding: 22px 26px; }
+
+  .card-meta { display: flex; align-items: center; gap: 9px; margin-bottom: 18px; }
+
+  .type-badge {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 5px;
+  }
+
+  .tb-post     { background: rgba(120,100,220,0.12); color: #a090dd; }
+  .tb-carousel { background: var(--brand-light); color: var(--brand); }
+  .tb-reels    { background: rgba(200,80,80,0.12); color: #dd8080; }
+  .tb-stories  { background: rgba(180,160,60,0.12); color: #c8b860; }
+
+  .cn { font-size: 12px; color: var(--muted); background: var(--surface2); padding: 3px 8px; border-radius: 6px; }
+  .cd { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+  /* preview */
+  .preview { display: grid; grid-template-columns: 140px 1fr; gap: 16px; margin-bottom: 16px; }
+  .preview.full { grid-template-columns: 1fr; }
+
+  .thumb {
+    border-radius: 10px; background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 6px;
+    color: var(--muted); font-size: 11px; aspect-ratio: 1;
+  }
+
+  .thumb.vert { aspect-ratio: 9/16; max-height: 140px; }
+  .thumb svg { opacity: 0.25; }
+
+  .slides { display: flex; gap: 5px; height: 120px; margin-bottom: 16px; }
+  .slide {
+    flex: 1; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px; cursor: pointer; transition: all 0.2s;
+    color: var(--muted); font-size: 10px;
+  }
+  .slide:hover { border-color: var(--brand); background: var(--brand-light); color: var(--brand); }
+  .slide-n { font-size: 14px; font-weight: 600; color: #4a4038; }
+
+  .text-area { display: flex; flex-direction: column; gap: 10px; }
+
+  .post-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 18px; line-height: 1.35; color: var(--text);
+  }
+
+  .post-copy {
+    font-size: 14px; color: #9a8e82;
+    line-height: 1.8; white-space: pre-line;
+  }
+
+  .post-copy.collapsed {
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+
+  .see-more { background: none; border: none; color: var(--brand); font-size: 13px;
+    font-family: 'Outfit', sans-serif; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag { font-size: 12px; color: var(--brand); background: var(--brand-light); border: 1px solid var(--brand-mid); padding: 3px 8px; border-radius: 5px; }
+
+  /* comment */
+  .comment-box {
+    margin-bottom: 16px; padding: 13px 15px;
+    border-radius: 10px; border: 1px solid var(--border2);
+    background: var(--surface2); display: none;
+    animation: fadeUp 0.2s ease;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+  .comment-box.show { display: block; }
+
+  .c-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+
+  textarea {
+    width: 100%; background: transparent; border: none; outline: none;
+    font-family: 'Outfit', sans-serif; font-size: 14px; color: var(--text);
+    resize: none; min-height: 54px; line-height: 1.6;
+  }
+  textarea::placeholder { color: var(--muted); }
+
+  /* actions */
+  .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+  .btn {
+    display: flex; align-items: center; gap: 5px;
+    padding: 9px 18px; border-radius: 9px;
+    font-size: 13px; font-weight: 500;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer; border: 1px solid transparent;
+    transition: all 0.18s;
+  }
+
+  .b-ok { background: var(--approve-l); border-color: rgba(74,144,96,0.3); color: var(--approve); }
+  .b-ok:hover, .b-ok.on { background: var(--approve); color: #fff; border-color: var(--approve); font-weight: 600; }
+
+  .b-ed { background: var(--warn-l); border-color: rgba(192,144,48,0.3); color: var(--warn); }
+  .b-ed:hover, .b-ed.on { background: var(--warn); color: #000; border-color: var(--warn); font-weight: 600; }
+
+  .b-no { background: var(--reject-l); border-color: rgba(192,64,64,0.25); color: var(--reject); }
+  .b-no:hover, .b-no.on { background: var(--reject); color: #fff; border-color: var(--reject); font-weight: 600; }
+
+  .b-undo { margin-left: auto; background: transparent; border-color: var(--border2); color: var(--muted); font-size: 12px; padding: 7px 13px; }
+  .b-undo:hover { border-color: var(--text); color: var(--text); }
+
+  .chip { display: none; align-items: center; gap: 5px;
+    padding: 7px 13px; border-radius: 9px; font-size: 13px; font-weight: 500; }
+  .chip.show { display: flex; }
+  .chip.ok { background: var(--approve-l); color: var(--approve); }
+  .chip.no { background: var(--reject-l); color: var(--reject); }
+  .chip.ed { background: var(--warn-l); color: var(--warn); }
+
+  /* ── BOTTOM BAR ── */
+  .bottom-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(19,16,14,0.97);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border);
+    padding: 14px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(.23,1,.32,1);
+    z-index: 200;
+  }
+  .bottom-bar.show { transform: translateY(0); }
+
+  .bar-info { font-size: 14px; color: var(--muted); }
+  .bar-info strong { color: var(--text); }
+
+  .submit {
+    padding: 11px 28px;
+    background: var(--brand);
+    border: none; border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600; font-size: 14px; color: #fff;
+    cursor: pointer; transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .submit:hover { background: #d08040; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(192,120,56,0.3); }
+
+  /* MODAL */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+    z-index: 500; display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .overlay.show { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: 22px; padding: 44px 36px;
+    max-width: 380px; width: 90%; text-align: center;
+    transform: scale(0.93); transition: transform 0.3s;
+  }
+  .overlay.show .modal { transform: scale(1); }
+
+  .m-icon { font-size: 44px; margin-bottom: 18px; }
+  .m-title { font-family: 'Libre Baskerville', serif; font-size: 24px; color: var(--text); margin-bottom: 8px; }
+  .m-sub { font-size: 14px; color: var(--muted); line-height: 1.6; }
+  .m-pills { display: flex; justify-content: center; gap: 8px; margin: 18px 0; flex-wrap: wrap; }
+  .mpill { padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; }
+  .mpill-ok { background: var(--approve-l); color: var(--approve); }
+  .mpill-ed { background: var(--warn-l); color: var(--warn); }
+  .mpill-no { background: var(--reject-l); color: var(--reject); }
+
+  @media (max-width: 600px) {
+    header, .hero, .filter, .cards, .bottom-bar { padding-left: 20px; padding-right: 20px; }
+    .preview { grid-template-columns: 1fr; }
+    .hero-title { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="dashboard.html">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Voltar
+  </a>
+  <div class="id-block">
+    <div class="dr-ava">CP</div>
+    <div class="dr-nm">Dr. César Prota</div>
+  </div>
+  <div class="lote-badge">Lote Março 2025</div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">
+    <span class="eyebrow-line"></span>
+    Central de Aprovação
+  </div>
+  <div class="hero-title">Dr. César,<br>revise seu <em>conteúdo.</em></div>
+  <div class="hero-sub">Cada peça foi preparada com atenção à sua comunicação. Aprove, solicite ajustes ou reprove — tudo aqui.</div>
+  <div class="hero-bottom">
+    <div class="progress-bar-wrap">
+      <div class="pb-label">
+        <span>Progresso</span>
+        <span id="pb-label-text">0 de 5 revisados</span>
+      </div>
+      <div class="pb-track">
+        <div class="pb-fill" id="pbFill"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="filter">
+  <button class="tab active" onclick="filterCards('all',this)">Todos <span class="tab-n" id="n-all">5</span></button>
+  <button class="tab" onclick="filterCards('pending',this)">Pendentes <span class="tab-n" id="n-pending">5</span></button>
+  <button class="tab" onclick="filterCards('approved',this)">Aprovados <span class="tab-n" id="n-approved">0</span></button>
+  <button class="tab" onclick="filterCards('issues',this)">Com ajuste <span class="tab-n" id="n-issues">0</span></button>
+</div>
+
+<div class="cards">
+
+  <!-- CARD 1 -->
+  <div class="card" id="c1" data-status="pending">
+    <div class="card-top"></div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="type-badge tb-post">Post</span>
+        <span class="cn">#01</span>
+        <span class="cd">📅 19 mar</span>
+      </div>
+      <div class="preview">
+        <div class="thumb">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Imagem</span>
+        </div>
+        <div class="text-area">
+          <div class="post-title">Rinoplastia: o que ninguém te conta antes da cirurgia</div>
+          <div class="post-copy collapsed" id="t1">
+A decisão pela rinoplastia vai muito além da estética. É uma transformação que impacta autoestima, respiração e qualidade de vida.
+
+O Dr. César Prota realiza mais de 200 procedimentos por ano com foco em resultados naturais e harmônicos, respeitando a individualidade de cada paciente.
+
+Quer entender se o procedimento é indicado para você? Agende uma consulta de avaliação. 🔗 Link na bio.
+          </div>
+          <button class="see-more" onclick="toggleText('t1',this)">Ver mais</button>
+          <div class="tags">
+            <span class="tag">#DrCésarProta</span><span class="tag">#Rinoplastia</span><span class="tag">#CirurgiaPlástica</span>
+          </div>
+        </div>
+      </div>
+      <div class="comment-box" id="ca1">
+        <div class="c-label">Seu comentário</div>
+        <textarea id="cm1" placeholder="O que precisa ser ajustado?"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn b-ok" onclick="setStatus(1,'approved')">✓ Aprovar</button>
+        <button class="btn b-ed" onclick="setStatus(1,'edited')">✏ Pedir edição</button>
+        <button class="btn b-no" onclick="setStatus(1,'rejected')">✕ Reprovar</button>
+        <div class="chip" id="chip1"></div>
+        <button class="btn b-undo" onclick="undo(1)">Desfazer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2 -->
+  <div class="card" id="c2" data-status="pending">
+    <div class="card-top"></div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="type-badge tb-carousel">Carrossel</span>
+        <span class="cn">#02</span>
+        <span class="cd">📅 21 mar</span>
+      </div>
+      <div class="slides">
+        <div class="slide"><div class="slide-n">1</div>Capa</div>
+        <div class="slide"><div class="slide-n">2</div>Slide</div>
+        <div class="slide"><div class="slide-n">3</div>Slide</div>
+        <div class="slide"><div class="slide-n">4</div>Slide</div>
+        <div class="slide"><div class="slide-n">5</div>CTA</div>
+      </div>
+      <div class="text-area">
+        <div class="post-title">Antes de agendar sua cirurgia, leia isso 📋</div>
+        <div class="post-copy collapsed" id="t2">
+Slide 1 — "5 perguntas que você deve fazer ao seu cirurgião"
+Slide 2 — Qual a sua experiência com este procedimento específico?
+Slide 3 — Posso ver fotos de resultados reais?
+Slide 4 — Qual o tempo de recuperação esperado?
+Slide 5 — "Dr. César responde tudo isso na sua primeira consulta →"
+        </div>
+        <button class="see-more" onclick="toggleText('t2',this)">Ver mais</button>
+      </div>
+      <div class="comment-box" id="ca2">
+        <div class="c-label">Seu comentário</div>
+        <textarea id="cm2" placeholder="O que precisa ser ajustado?"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn b-ok" onclick="setStatus(2,'approved')">✓ Aprovar</button>
+        <button class="btn b-ed" onclick="setStatus(2,'edited')">✏ Pedir edição</button>
+        <button class="btn b-no" onclick="setStatus(2,'rejected')">✕ Reprovar</button>
+        <div class="chip" id="chip2"></div>
+        <button class="btn b-undo" onclick="undo(2)">Desfazer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3 -->
+  <div class="card" id="c3" data-status="pending">
+    <div class="card-top"></div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="type-badge tb-reels">Roteiro Reels</span>
+        <span class="cn">#03</span>
+        <span class="cd">📅 22 mar</span>
+      </div>
+      <div class="preview">
+        <div class="thumb vert" style="background:linear-gradient(135deg,#1f1814,#2a2018)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="1.5"><polygon points="5 3 19 12 5 21"/></svg>
+          <span style="color:var(--brand)">Reel</span>
+        </div>
+        <div class="text-area">
+          <div class="post-title">Recuperação pós-cirurgia: desmistificando medos</div>
+          <div class="post-copy collapsed" id="t3">
+[0-3s] Hook: "Medo da recuperação te impede de fazer a cirurgia?"
+[3-10s] Listar os 3 maiores medos (texto na tela)
+[10-20s] Dr. César explica o protocolo de recuperação moderno
+[20-28s] Depoimento em texto de paciente (anônimo)
+[28-33s] CTA: "Tire suas dúvidas em uma consulta → Link na bio"
+          </div>
+          <button class="see-more" onclick="toggleText('t3',this)">Ver mais</button>
+        </div>
+      </div>
+      <div class="comment-box" id="ca3">
+        <div class="c-label">Seu comentário</div>
+        <textarea id="cm3" placeholder="O que precisa ser ajustado?"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn b-ok" onclick="setStatus(3,'approved')">✓ Aprovar</button>
+        <button class="btn b-ed" onclick="setStatus(3,'edited')">✏ Pedir edição</button>
+        <button class="btn b-no" onclick="setStatus(3,'rejected')">✕ Reprovar</button>
+        <div class="chip" id="chip3"></div>
+        <button class="btn b-undo" onclick="undo(3)">Desfazer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4 -->
+  <div class="card" id="c4" data-status="pending">
+    <div class="card-top"></div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="type-badge tb-stories">Stories</span>
+        <span class="cn">#04</span>
+        <span class="cd">📅 23 mar</span>
+      </div>
+      <div class="preview">
+        <div class="thumb vert">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/></svg>
+          <span>Story</span>
+        </div>
+        <div class="text-area">
+          <div class="post-title">Stories — Enquete: "Você já pensou em fazer rinoplastia?"</div>
+          <div class="post-copy collapsed" id="t4">
+Story 1: Pergunta com enquete
+"Você já pensou em fazer algum procedimento estético?"
+Opções: Sim, mas tenho dúvidas / Não, por enquanto
+
+Story 2: "Manda sua dúvida aqui" → caixa de perguntas abertas
+
+Story 3: "Dr. César vai responder as melhores perguntas nos próximos stories!"
+          </div>
+          <button class="see-more" onclick="toggleText('t4',this)">Ver mais</button>
+        </div>
+      </div>
+      <div class="comment-box" id="ca4">
+        <div class="c-label">Seu comentário</div>
+        <textarea id="cm4" placeholder="O que precisa ser ajustado?"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn b-ok" onclick="setStatus(4,'approved')">✓ Aprovar</button>
+        <button class="btn b-ed" onclick="setStatus(4,'edited')">✏ Pedir edição</button>
+        <button class="btn b-no" onclick="setStatus(4,'rejected')">✕ Reprovar</button>
+        <div class="chip" id="chip4"></div>
+        <button class="btn b-undo" onclick="undo(4)">Desfazer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5 -->
+  <div class="card" id="c5" data-status="pending">
+    <div class="card-top"></div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="type-badge tb-post">Post</span>
+        <span class="cn">#05</span>
+        <span class="cd">📅 26 mar</span>
+      </div>
+      <div class="preview">
+        <div class="thumb">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Imagem</span>
+        </div>
+        <div class="text-area">
+          <div class="post-title">Resultado natural: a marca de uma boa cirurgia ✨</div>
+          <div class="post-copy collapsed" id="t5">
+O melhor resultado de uma cirurgia plástica é aquele que as pessoas não percebem — apenas admiram.
+
+O Dr. César Prota acredita que a cirurgia deve realçar o que há de mais belo em cada pessoa, nunca apagar sua identidade.
+
+Mais de 10 anos de experiência e resultados que falam por si. Conheça nosso trabalho. 🔗
+          </div>
+          <button class="see-more" onclick="toggleText('t5',this)">Ver mais</button>
+          <div class="tags">
+            <span class="tag">#DrCésarProta</span><span class="tag">#ResultadoNatural</span><span class="tag">#CirurgiaPlástica</span>
+          </div>
+        </div>
+      </div>
+      <div class="comment-box" id="ca5">
+        <div class="c-label">Seu comentário</div>
+        <textarea id="cm5" placeholder="O que precisa ser ajustado?"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn b-ok" onclick="setStatus(5,'approved')">✓ Aprovar</button>
+        <button class="btn b-ed" onclick="setStatus(5,'edited')">✏ Pedir edição</button>
+        <button class="btn b-no" onclick="setStatus(5,'rejected')">✕ Reprovar</button>
+        <div class="chip" id="chip5"></div>
+        <button class="btn b-undo" onclick="undo(5)">Desfazer</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar" id="bottomBar">
+  <div class="bar-info"><strong id="barCount">0 de 5</strong> revisados</div>
+  <button class="submit" onclick="submitAll()">Enviar respostas →</button>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="m-icon">🏆</div>
+    <div class="m-title">Respostas enviadas!</div>
+    <div class="m-sub">Obrigado, Dr. César! Sua equipe já recebeu seu feedback.</div>
+    <div class="m-pills" id="mPills"></div>
+    <div class="m-sub" style="font-size:13px">Um resumo foi enviado ao seu e-mail.</div>
+  </div>
+</div>
+
+<script>
+  const TOTAL = 5;
+  const state = {};
+  const cfg = {
+    approved: { cls:'approved', chip:'ok', label:'✓ Aprovado' },
+    edited:   { cls:'with-edit', chip:'ed', label:'✏ Edição solicitada' },
+    rejected: { cls:'rejected', chip:'no', label:'✕ Reprovado' }
+  };
+
+  function setStatus(id, status) {
+    state[id] = status;
+    const card = document.getElementById('c'+id);
+    const chip = document.getElementById('chip'+id);
+    const ca   = document.getElementById('ca'+id);
+    card.className = 'card ' + cfg[status].cls;
+    card.setAttribute('data-status', status);
+    chip.className = 'chip show ' + cfg[status].chip;
+    chip.textContent = cfg[status].label;
+    ca.classList.toggle('show', status !== 'approved');
+    sync();
+  }
+
+  function undo(id) {
+    delete state[id];
+    const card = document.getElementById('c'+id);
+    card.className = 'card'; card.setAttribute('data-status','pending');
+    document.getElementById('chip'+id).className = 'chip';
+    document.getElementById('ca'+id).classList.remove('show');
+    document.getElementById('cm'+id).value = '';
+    sync();
+  }
+
+  function sync() {
+    const done = Object.keys(state).length;
+    const approved = Object.values(state).filter(s=>s==='approved').length;
+    const edited   = Object.values(state).filter(s=>s==='edited').length;
+    const rejected = Object.values(state).filter(s=>s==='rejected').length;
+
+    document.getElementById('pbFill').style.width = (done/TOTAL*100)+'%';
+    document.getElementById('pb-label-text').textContent = done+' de '+TOTAL+' revisados';
+    document.getElementById('n-all').textContent = TOTAL;
+    document.getElementById('n-pending').textContent = TOTAL - done;
+    document.getElementById('n-approved').textContent = approved;
+    document.getElementById('n-issues').textContent = edited + rejected;
+    document.getElementById('barCount').textContent = done+' de '+TOTAL;
+    document.getElementById('bottomBar').classList.toggle('show', done > 0);
+  }
+
+  function filterCards(f, tab) {
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.card').forEach(c=>{
+      const s = c.getAttribute('data-status');
+      const show = f==='all' || (f==='pending' && s==='pending') ||
+                   (f==='approved' && s==='approved') ||
+                   (f==='issues' && (s==='edited'||s==='rejected'));
+      c.style.display = show ? '' : 'none';
+    });
+  }
+
+  function toggleText(id, btn) {
+    const el = document.getElementById(id);
+    const col = el.classList.toggle('collapsed');
+    btn.textContent = col ? 'Ver mais' : 'Ver menos';
+  }
+
+  function submitAll() {
+    const approved = Object.values(state).filter(s=>s==='approved').length;
+    const edited   = Object.values(state).filter(s=>s==='edited').length;
+    const rejected = Object.values(state).filter(s=>s==='rejected').length;
+    let html = '';
+    if (approved) html += `<span class="mpill mpill-ok">✓ ${approved} aprovados</span>`;
+    if (edited)   html += `<span class="mpill mpill-ed">✏ ${edited} com edição</span>`;
+    if (rejected) html += `<span class="mpill mpill-no">✕ ${rejected} reprovados</span>`;
+    document.getElementById('mPills').innerHTML = html;
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  document.getElementById('overlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) e.currentTarget.classList.remove('show');
+  });
+</script>
+</body>
+</html>
