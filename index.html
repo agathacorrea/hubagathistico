@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Diretório de Links</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f6f3;
+      --surface: #ffffff;
+      --border: #e8e5e0;
+      --text: #1a1a1a;
+      --muted: #888580;
+      --accent: #3d3730;
+      --tag-bg: #f0ede8;
+      --hover: #faf9f7;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 60px 24px;
+    }
+
+    header {
+      max-width: 860px;
+      margin: 0 auto 56px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      margin-bottom: 10px;
+      line-height: 1.15;
+    }
+
+    .section {
+      max-width: 860px;
+      margin: 0 auto 48px;
+    }
+
+    .section-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.18s, border-color 0.18s, transform 0.18s;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .card:hover {
+      background: var(--hover);
+      border-color: #ccc9c3;
+      transform: translateY(-2px);
+    }
+
+    .card-name {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .card-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card-url {
+      font-size: 0.7rem;
+      color: #b5b0aa;
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Wide card for featured links */
+    .card.wide {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .card.wide .card-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .card.wide .card-badge {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--tag-bg);
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+
+    .side-by-side {
+      max-width: 860px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .side-by-side .section {
+      max-width: 100%;
+      margin: 0 0 48px;
+    }
+
+    .grid-single {
+      grid-template-columns: 1fr !important;
+    }
+
+    .grid-two {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .grid-three {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    @media (max-width: 700px) {
+      .grid-two {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .grid-three { grid-template-columns: 1fr !important; }
+    }
+
+    @media (max-width: 700px) {
+      .side-by-side {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    /* Tropical accent colors per section */
+    .section[data-color="coral"] .section-title { color: #FF6B6B; border-bottom-color: #FF6B6B40; }
+    .section[data-color="coral"] .card:hover { border-color: #FF6B6B60; }
+    .section[data-color="coral"] .card-badge { background: #FF6B6B20; color: #c94040; }
+
+    .section[data-color="teal"] .section-title { color: #2EC4B6; border-bottom-color: #2EC4B640; }
+    .section[data-color="teal"] .card:hover { border-color: #2EC4B660; }
+    .section[data-color="teal"] .card-badge { background: #2EC4B620; color: #1a8a82; }
+
+    .section[data-color="mango"] .section-title { color: #FF9F1C; border-bottom-color: #FF9F1C40; }
+    .section[data-color="mango"] .card:hover { border-color: #FF9F1C60; }
+    .section[data-color="mango"] .card-badge { background: #FF9F1C20; color: #b86e00; }
+
+    .section[data-color="orchid"] .section-title { color: #A855F7; border-bottom-color: #A855F740; }
+    .section[data-color="orchid"] .card:hover { border-color: #A855F760; }
+    .section[data-color="orchid"] .card-badge { background: #A855F720; color: #7c3aed; }
+
+    .section[data-color="lime"] .section-title { color: #70C24A; border-bottom-color: #70C24A40; }
+    .section[data-color="lime"] .card:hover { border-color: #70C24A60; }
+    .section[data-color="lime"] .card-badge { background: #70C24A20; color: #4a8a2e; }
+
+    .section[data-color="pink"] .section-title { color: #F72585; border-bottom-color: #F7258540; }
+    .section[data-color="pink"] .card:hover { border-color: #F7258560; }
+    .section[data-color="pink"] .card-badge { background: #F7258520; color: #b5006a; }
+
+    /* Entrada animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section {
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .section:nth-child(1) { animation-delay: 0.05s; }
+    .section:nth-child(2) { animation-delay: 0.12s; }
+    .section:nth-child(3) { animation-delay: 0.19s; }
+    .section:nth-child(4) { animation-delay: 0.26s; }
+    .section:nth-child(5) { animation-delay: 0.33s; }
+    .section:nth-child(6) { animation-delay: 0.40s; }
+    .section:nth-child(7) { animation-delay: 0.47s; }
+    .section:nth-child(8) { animation-delay: 0.54s; }
+
+    .card {
+      animation: fadeUp 0.45s ease both;
+    }
+
+
+    /* Colored top border per section */
+    .section[data-color="coral"] .card { border-top: 3px solid #FF6B6B50; }
+    .section[data-color="coral"] .card:hover { border-top-color: #FF6B6B; }
+
+    .section[data-color="teal"] .card { border-top: 3px solid #2EC4B650; }
+    .section[data-color="teal"] .card:hover { border-top-color: #2EC4B6; }
+
+    .section[data-color="mango"] .card { border-top: 3px solid #FF9F1C50; }
+    .section[data-color="mango"] .card:hover { border-top-color: #FF9F1C; }
+
+    .section[data-color="orchid"] .card { border-top: 3px solid #A855F750; }
+    .section[data-color="orchid"] .card:hover { border-top-color: #A855F7; }
+
+    .section[data-color="pink"] .card { border-top: 3px solid #F7258550; }
+    .section[data-color="pink"] .card:hover { border-top-color: #F72585; }
+
+    .section[data-color="lime"] .card { border-top: 3px solid #70C24A50; }
+    .section[data-color="lime"] .card:hover { border-top-color: #70C24A; }
+
+    /* Scroll indicator */
+    #scroll-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, #FF6B6B, #FF9F1C, #A855F7, #2EC4B6);
+      z-index: 999;
+      transition: width 0.1s linear;
+    }
+
+    /* Search bar */
+    .search-wrap {
+      max-width: 860px;
+      margin: 0 auto 40px;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 12px 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-wrap input::placeholder { color: var(--muted); }
+    .search-wrap input:focus { border-color: #FF6B6B80; }
+
+    .card.hidden { display: none; }
+
+    /* Spotify widget */
+    .spotify-widget {
+      position: fixed;
+      left: 20px;
+      bottom: 20px;
+      z-index: 100;
+      width: 260px;
+    }
+
+    .spotify-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(247, 244, 240, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 8px 16px 8px 10px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      transition: background 0.2s, box-shadow 0.2s;
+      user-select: none;
+      width: fit-content;
+    }
+
+    .spotify-toggle:hover {
+      background: rgba(247, 244, 240, 0.97);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .spotify-toggle .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #1DB954;
+      flex-shrink: 0;
+    }
+
+    .spotify-player {
+      display: none;
+      margin-bottom: 8px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+      border: 1px solid var(--border);
+      background: rgba(247, 244, 240, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .spotify-player.open { display: block; }
+
+    @media (max-width: 900px) {
+      .spotify-widget { display: none; }
+    }
+
+
+    /* Header subtitle style */
+    header p {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+    }
+
+    /* Back to top button */
+    #back-top {
+      position: fixed;
+      right: 28px;
+      bottom: 28px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(247, 244, 240, 0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      z-index: 200;
+    }
+
+    #back-top.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #back-top:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+    }
+
+    #back-top svg { width: 16px; height: 16px; stroke: var(--muted); }
+
+    /* Copy button */
+    .card {
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: var(--tag-bg);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s, background 0.2s;
+      z-index: 2;
+    }
+
+    .card:hover .copy-btn { opacity: 1; }
+    .copy-btn:hover { background: var(--border); }
+    .copy-btn svg { width: 13px; height: 13px; stroke: var(--muted); }
+
+    .copy-btn .copy-tooltip {
+      position: absolute;
+      top: -26px;
+      right: 0;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.65rem;
+      padding: 3px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .copy-btn.copied .copy-tooltip { opacity: 1; }
+    .copy-btn.copied svg { stroke: #2EC4B6; }
+
+    /* Section indicator */
+    #section-indicator {
+      position: fixed;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .sec-dot {
+      width: 3px;
+      height: 24px;
+      border-radius: 3px;
+      background: var(--border);
+      transition: background 0.3s, height 0.3s;
+      cursor: pointer;
+    }
+
+    .sec-dot.active {
+      height: 36px;
+    }
+
+    @media (max-width: 1100px) {
+      #section-indicator { display: none; }
+    }
+
+
+    /* Decorative separator */
+    .separator {
+      max-width: 860px;
+      margin: 0 auto 48px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--border);
+    }
+
+    .separator::before,
+    .separator::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .separator span {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.75rem;
+      color: #ccc9c3;
+      letter-spacing: 0.15em;
+      user-select: none;
+    }
+
+    /* Favorites section */
+    #sec-favoritos .section-title { color: #FF9F1C; border-bottom-color: #FF9F1C40; }
+    #sec-favoritos .card:hover { border-color: #FF9F1C60; }
+    #sec-favoritos .card { border-top: 3px solid #FF9F1C50; }
+    #sec-favoritos .card:hover { border-top-color: #FF9F1C; }
+    #sec-favoritos { display: none; }
+    #sec-favoritos.has-favorites { display: block; }
+
+    /* Star button */
+    .star-btn {
+      position: absolute;
+      top: 10px;
+      right: 40px;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 2;
+      font-size: 14px;
+      line-height: 1;
+      color: var(--muted);
+    }
+
+    .card:hover .star-btn { opacity: 1; }
+    .star-btn.starred { opacity: 1; color: #FF9F1C; }
+
+    @media (max-width: 600px) {
+      header p { font-size: 1.5rem; }
+      .card.wide { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="scroll-bar"></div>
+
+<header>
+  <h1>Hub Agathístico</h1>
+  <p>onde todas as abas abertas da minha cabeça, se encontram</p>
+</header>
+
+<div class="search-wrap">
+  <input type="text" id="search" placeholder="Buscar links..." autocomplete="off" />
+</div>
+
+<!-- FAVORITOS -->
+<section class="section" id="sec-favoritos" data-color="mango">
+  <div class="section-title">Favoritos</div>
+  <div class="grid" id="favorites-grid"></div>
+</section>
+
+<div class="separator" id="sep-favoritos" style="display:none"><span>✦</span></div>
+
+<!-- PRINCIPAIS -->
+<section class="section" data-color="coral" id="sec-principais">
+  <div class="section-title">Principais</div>
+  <div class="grid grid-three">
+    <a class="card" href="https://drive.google.com/drive/folders/1eno6lTC8LkU1M80Tax-ILp2ofHfVG1Y6" target="_blank">
+      <span class="card-name">Drive Adara</span>
+      <span class="card-desc">Conteúdos, roteiros, resultados e tudo mais</span>
+      <span class="card-url">drive.google.com</span>
+    </a>
+    <a class="card" href="https://drive.google.com/drive/folders/1YxpT2O5rO-OOo0vj_ZWN8NTRT-zX-He7" target="_blank">
+      <span class="card-name">Diretório de Fotos Adara</span>
+      <span class="card-desc">Banco de fotos do projeto</span>
+      <span class="card-url">drive.google.com</span>
+    </a>
+    <a class="card" href="https://agathacorrea.github.io/aprovador/?v=dashboard" target="_blank">
+      <span class="card-name">Aprovador de Posts</span>
+      <span class="card-desc">Dashboard de aprovação de conteúdo</span>
+      <span class="card-url">agathacorrea.github.io</span>
+    </a>
+  </div>
+</section>
+
+<div class="separator"><span>✦</span></div>
+
+<!-- CURSOS & PLATAFORMAS -->
+<section class="section">
+  <div class="section-title">Cursos & Plataformas</div>
+  <div class="grid grid-two">
+    <a class="card" href="https://alunos.grupomoulin.com/" target="_blank">
+      Grupo Moulin — Alunos</span>
+      <span class="card-desc">Plataforma de cursos e conteúdos do Grupo Moulin</span>
+      <span class="card-url">alunos.grupomoulin.com</span>
+    </a>
+    <a class="card" href="https://members.kiwify.com/?club=81751461-cead-4bc5-85fc-1d37c2cc4abb" target="_blank">
+      Canva Evolution</span>
+      <span class="card-desc">Área de membros do curso Canva Evolution</span>
+      <span class="card-url">members.kiwify.com</span>
+    </a>
+  </div>
+</section>
+
+<div class="separator"><span>✦</span></div>
+
+<!-- BANCOS DE IMAGEM -->
+<section class="section" data-color="mango" id="sec-bancos-de-imagens-gifs-vídeos-gratuitos">
+  <div class="section-title">Bancos de Imagens, GIFs & Vídeos Gratuitos</div>
+  <div class="grid">
+    <a class="card" href="https://dupephotos.com/" target="_blank">
+      <span class="card-name">Dupe</span>
+      <span class="card-desc">Fotos estilosas e gratuitas</span>
+      <span class="card-url">dupephotos.com</span>
+    </a>
+    <a class="card" href="https://www.pexels.com/pt-br/" target="_blank">
+      <span class="card-name">Pexels</span>
+      <span class="card-desc">Fotos e vídeos profissionais gratuitos</span>
+      <span class="card-url">pexels.com</span>
+    </a>
+    <a class="card" href="https://unsplash.com/pt-br" target="_blank">
+      <span class="card-name">Unsplash</span>
+      <span class="card-desc">Lindas imagens e fotos gratuitas</span>
+      <span class="card-url">unsplash.com</span>
+    </a>
+    <a class="card" href="https://pixabay.com/pt/" target="_blank">
+      <span class="card-name">Pixabay</span>
+      <span class="card-desc">Imagens, vídeos e músicas livres</span>
+      <span class="card-url">pixabay.com</span>
+    </a>
+    <a class="card" href="https://giphy.com/" target="_blank">
+      <span class="card-name">GIPHY</span>
+      <span class="card-desc">O maior banco de GIFs do mundo</span>
+      <span class="card-url">giphy.com</span>
+    </a>
+    <a class="card" href="https://www.rawpixel.com/" target="_blank">
+      <span class="card-name">Rawpixel</span>
+      <span class="card-desc">Fotos, vetores e mockups gratuitos</span>
+      <span class="card-url">rawpixel.com</span>
+    </a>
+    <a class="card" href="https://kaboompics.com/" target="_blank">
+      <span class="card-name">Kaboompics</span>
+      <span class="card-desc">Fotos lifestyle de alta qualidade</span>
+      <span class="card-url">kaboompics.com</span>
+    </a>
+    <a class="card" href="https://nappy.co/" target="_blank">
+      <span class="card-name">Nappy</span>
+      <span class="card-desc">Fotos de pessoas negras e pardas</span>
+      <span class="card-url">nappy.co</span>
+    </a>
+    <a class="card" href="https://coverr.co/" target="_blank">
+      <span class="card-name">Coverr</span>
+      <span class="card-desc">Vídeos gratuitos para uso</span>
+      <span class="card-url">coverr.co</span>
+    </a>
+    <a class="card" href="https://app.flim.ai/" target="_blank">
+      <span class="card-name">Flim</span>
+      <span class="card-desc">Busca visual de referências cinematográficas</span>
+      <span class="card-url">app.flim.ai</span>
+    </a>
+  </div>
+</section>
+
+<div class="separator"><span>✦</span></div>
+
+<!-- INSPIRAÇÃO -->
+<section class="section" data-color="orchid" id="sec-inspiração-tendências">
+  <div class="section-title">Inspiração & Tendências</div>
+  <div class="grid">
+    <a class="card" href="https://br.pinterest.com/" target="_blank">
+      <span class="card-name">Pinterest</span>
+      <span class="card-desc">Referências visuais — Social Media · Nutrologia · Nutrição</span>
+      <span class="card-url">pinterest.com</span>
+    </a>
+    <a class="card" href="https://www.tiktok.com/" target="_blank">
+      <span class="card-name">TikTok</span>
+      <span class="card-desc">Ideias e tendências — Nutrição · Nutrologia · Estilo de Vida</span>
+      <span class="card-url">tiktok.com</span>
+    </a>
+    <a class="card" href="https://www.tiktok.com/tiktokstudio/inspiration" target="_blank">
+      <span class="card-name">TikTok Studio — Inspiration</span>
+      <span class="card-desc">Trends em alta no TikTok, o que está bombando</span>
+      <span class="card-url">tiktok.com/tiktokstudio</span>
+    </a>
+    <a class="card" href="https://www.behance.net/" target="_blank">
+      <span class="card-name">Behance</span>
+      <span class="card-desc">Portfólios e referências de design de tudo</span>
+      <span class="card-url">behance.net</span>
+    </a>
+  </div>
+</section>
+
+<div class="separator"><span>✦</span></div>
+
+<!-- DESIGN -->
+<section class="section" data-color="pink" id="sec-design">
+  <div class="section-title">Design</div>
+  <div class="grid">
+    <a class="card" href="https://www.canva.com/" target="_blank">
+      <span class="card-name">Canva</span>
+      <span class="card-desc">Criação de designs, apresentações e posts</span>
+      <span class="card-url">canva.com</span>
+    </a>
+
+    <a class="card" href="https://coolors.co/palettes/trending" target="_blank">
+      <span class="card-name">Coolors</span>
+      <span class="card-desc">Paletas de cores com HEX e RGB em tendência</span>
+      <span class="card-url">coolors.co</span>
+    </a>
+    <a class="card" href="https://www.freeject.net/" target="_blank">
+      <span class="card-name">Freeject</span>
+      <span class="card-desc">Texturas gratuitas para vídeos e fotos</span>
+      <span class="card-url">freeject.net</span>
+    </a>
+    <a class="card" href="https://texturefabrik.com/" target="_blank">
+      <span class="card-name">Texture Fabrik</span>
+      <span class="card-desc">Texturas para adicionar nos designs</span>
+      <span class="card-url">texturefabrik.com</span>
+    </a>
+    <a class="card" href="https://www.kittl.com/" target="_blank">
+      <span class="card-name">Kittl</span>
+      <span class="card-desc">Como o Canva, mas com mais liberdade criativa</span>
+      <span class="card-url">kittl.com</span>
+    </a>
+    <a class="card" href="https://www.photopea.com/" target="_blank">
+      <span class="card-name">Photopea</span>
+      <span class="card-desc">Quase um Photoshop — online e gratuito</span>
+      <span class="card-url">photopea.com</span>
+    </a>
+    <a class="card" href="https://www.myfonts.com/pt/pages/whatthefont" target="_blank">
+      <span class="card-name">WhatTheFont</span>
+      <span class="card-desc">Identifica qualquer fonte a partir de uma imagem</span>
+      <span class="card-url">myfonts.com</span>
+    </a>
+
+  </div>
+</section>
+
+<div class="separator"><span>✦</span></div>
+
+<!-- MOCKUPS -->
+<section class="section" data-color="lime" id="sec-mockups">
+  <div class="section-title">Mockups</div>
+  <div class="grid">
+    <a class="card" href="https://mrmockup.com/free-mockups/" target="_blank">
+      <span class="card-name">Mr. Mockup</span>
+      <span class="card-desc">Mockups gratuitos de alta qualidade</span>
+      <span class="card-url">mrmockup.com</span>
+    </a>
+    <a class="card" href="https://mockups-design.com/" target="_blank">
+      <span class="card-name">Mockups Design</span>
+      <span class="card-desc">Grande biblioteca de mockups gratuitos</span>
+      <span class="card-url">mockups-design.com</span>
+    </a>
+    <a class="card" href="https://www.ls.graphics/free-mockups" target="_blank">
+      <span class="card-name">LS Graphics</span>
+      <span class="card-desc">Mockups premium gratuitos</span>
+      <span class="card-url">ls.graphics</span>
+    </a>
+    <a class="card" href="https://www.pixeden.com/free" target="_blank">
+      <span class="card-name">Pixeden</span>
+      <span class="card-desc">Recursos de design e mockups gratuitos</span>
+      <span class="card-url">pixeden.com</span>
+    </a>
+  </div>
+</section>
+
+<div class="separator"><span>✦</span></div>
+
+<!-- ICONS -->
+<section class="section" data-color="teal" id="sec-icones">
+  <div class="section-title">Ícones</div>
+  <div class="grid">
+    <a class="card" href="https://www.flaticon.com/br/" target="_blank">
+      <span class="card-name">Flaticon</span>
+      <span class="card-desc">Maior banco de ícones gratuitos do mundo</span>
+      <span class="card-url">flaticon.com</span>
+    </a>
+    <a class="card" href="https://icons8.com.br/" target="_blank">
+      <span class="card-name">Icons8</span>
+      <span class="card-desc">Ícones, ilustrações, fotos e músicas</span>
+      <span class="card-url">icons8.com.br</span>
+    </a>
+  </div>
+</section>
+
+
+<div class="spotify-widget">
+  <div class="spotify-player" id="spotify-player">
+    <iframe 
+      src="https://open.spotify.com/embed/playlist/4Fr22yNKCc1HlKsrQrsUef?utm_source=generator&theme=0" 
+      width="260" 
+      height="352" 
+      frameborder="0" 
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+      loading="lazy">
+    </iframe>
+  </div>
+  <div class="spotify-toggle" id="spotify-toggle">
+    <span class="dot"></span>
+    playlist
+  </div>
+</div>
+<div id="section-indicator">
+  <div class="sec-dot" data-target="sec-favoritos" data-color="#FF9F1C" title="Favoritos"></div>
+  <div class="sec-dot" data-target="sec-principais" data-color="#FF6B6B" title="Principais"></div>
+  <div class="sec-dot" data-target="sec-cursos" data-color="#2EC4B6" title="Cursos & Plataformas"></div>
+  <div class="sec-dot" data-target="sec-bancos" data-color="#FF9F1C" title="Bancos de Imagens"></div>
+  <div class="sec-dot" data-target="sec-inspiracao" data-color="#A855F7" title="Inspiração"></div>
+  <div class="sec-dot" data-target="sec-design" data-color="#F72585" title="Design"></div>
+  <div class="sec-dot" data-target="sec-mockups" data-color="#70C24A" title="Mockups"></div>
+  <div class="sec-dot" data-target="sec-icones" data-color="#2EC4B6" title="Ícones"></div>
+</div>
+
+<button id="back-top" title="Voltar ao topo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
+
+<script>
+  // Spotify toggle
+  document.getElementById('spotify-toggle').addEventListener('click', () => {
+    document.getElementById('spotify-player').classList.toggle('open');
+  });
+
+  // Scroll events
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    document.getElementById('scroll-bar').style.width = (scrollTop / docHeight * 100) + '%';
+    document.getElementById('back-top').classList.toggle('visible', scrollTop > 300);
+    document.querySelectorAll('.sec-dot').forEach(dot => {
+      const target = document.getElementById(dot.dataset.target);
+      if (!target) return;
+      const rect = target.getBoundingClientRect();
+      const active = rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2;
+      dot.style.background = active ? dot.dataset.color : 'var(--border)';
+      dot.classList.toggle('active', active);
+    });
+  });
+
+  // Dot click
+  document.querySelectorAll('.sec-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      const t = document.getElementById(dot.dataset.target);
+      if (t) t.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  // Search
+  document.getElementById('search').addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('.card').forEach(card => {
+      card.classList.toggle('hidden', q !== '' && !card.innerText.toLowerCase().includes(q));
+    });
+  });
+
+  // Favorites
+  let favorites = JSON.parse(localStorage.getItem('hub-favorites') || '[]');
+  function saveFavorites() { localStorage.setItem('hub-favorites', JSON.stringify(favorites)); }
+
+  function renderFavorites() {
+    const grid = document.getElementById('favorites-grid');
+    const section = document.getElementById('sec-favoritos');
+    const sep = document.getElementById('sep-favoritos');
+    grid.innerHTML = '';
+    if (!favorites.length) {
+      section.classList.remove('has-favorites');
+      if (sep) sep.style.display = 'none';
+      return;
+    }
+    section.classList.add('has-favorites');
+    if (sep) sep.style.display = '';
+    favorites.forEach(f => {
+      const a = document.createElement('a');
+      a.className = 'card';
+      a.href = f.url;
+      a.target = '_blank';
+      a.innerHTML = `<span class="card-name">${f.name}</span><span class="card-desc">${f.desc}</span><span class="card-url">${f.domain}</span>`;
+      addCopyBtn(a);
+      addStarBtn(a, f.url, f.name, f.desc, f.domain, true);
+      grid.appendChild(a);
+    });
+  }
+
+  function addCopyBtn(card) {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="copy-tooltip">copiado!</span>`;
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      navigator.clipboard.writeText(card.href);
+      btn.classList.add('copied');
+      setTimeout(() => btn.classList.remove('copied'), 2000);
+    });
+    card.appendChild(btn);
+  }
+
+  function addStarBtn(card, url, name, desc, domain, isStarred) {
+    const btn = document.createElement('button');
+    btn.className = 'star-btn' + (isStarred ? ' starred' : '');
+    btn.innerHTML = isStarred ? '★' : '☆';
+    btn.title = isStarred ? 'Remover dos favoritos' : 'Adicionar aos favoritos';
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const idx = favorites.findIndex(f => f.url === url);
+      if (idx === -1) {
+        favorites.push({url, name, desc, domain});
+        btn.classList.add('starred'); btn.innerHTML = '★';
+      } else {
+        favorites.splice(idx, 1);
+        btn.classList.remove('starred'); btn.innerHTML = '☆';
+      }
+      saveFavorites();
+      renderFavorites();
+    });
+    card.appendChild(btn);
+  }
+
+  document.querySelectorAll('.section:not(#sec-favoritos) .card').forEach(card => {
+    const url = card.href;
+    const name = card.querySelector('.card-name')?.innerText || '';
+    const desc = card.querySelector('.card-desc')?.innerText || '';
+    const domain = card.querySelector('.card-url')?.innerText || '';
+    addCopyBtn(card);
+    addStarBtn(card, url, name, desc, domain, favorites.some(f => f.url === url));
+  });
+
+  renderFavorites();
+</script>
+</body>
+</html>
